@@ -21,6 +21,6 @@ export default class Example extends Component {
     }
 }
 
-if (document.getElementById('example')) {
-    ReactDOM.render(<Example />, document.getElementById('example'));
+if (document.getElementById('content-candidates')) {
+    ReactDOM.render(<Example />, document.getElementById('content-candidates'));
 }
