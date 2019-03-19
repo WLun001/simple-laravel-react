@@ -61232,7 +61232,7 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
  */
 
 
-__webpack_require__(/*! ./components/Example */ "./resources/js/components/Example.jsx");
+__webpack_require__(/*! ./components/Candidates */ "./resources/js/components/Candidates.jsx");
 
 /***/ }),
 
@@ -61294,16 +61294,16 @@ if (token) {
 
 /***/ }),
 
-/***/ "./resources/js/components/Example.jsx":
-/*!*********************************************!*\
-  !*** ./resources/js/components/Example.jsx ***!
-  \*********************************************/
+/***/ "./resources/js/components/Candidates.jsx":
+/*!************************************************!*\
+  !*** ./resources/js/components/Candidates.jsx ***!
+  \************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Example; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Candidates; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
@@ -61329,43 +61329,83 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 
 
-var Example =
+var Candidates =
 /*#__PURE__*/
 function (_Component) {
-  _inherits(Example, _Component);
+  _inherits(Candidates, _Component);
 
-  function Example() {
-    _classCallCheck(this, Example);
+  function Candidates(props) {
+    var _this;
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Example).apply(this, arguments));
+    _classCallCheck(this, Candidates);
+
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Candidates).call(this, props));
+    _this.state = {
+      candidates: null
+    };
+    return _this;
   }
 
-  _createClass(Example, [{
+  _createClass(Candidates, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      var _this2 = this;
+
+      var url = 'api/candidates';
+      fetch(url, {
+        headers: {
+          Accept: 'application/json'
+        },
+        credentials: 'same-origin'
+      }).then(function (response) {
+        if (!response.ok) throw Error([response.status, response.statusText].join(' '));
+        return response.json();
+      }).then(function (body) {
+        console.log(body);
+
+        _this2.setState({
+          candidates: body.data
+        });
+      }).catch(function (error) {
+        return alert(error);
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
+      var candidates = this.state.candidates;
+      var content;
+
+      if (!candidates) {
+        content = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "Loading data...");
+      } else if (candidates.length === 0) {
+        content = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "No Candidates in record");
+      } else {
+        var items = candidates.map(function (candidate) {
+          return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
+            key: candidate.id
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, candidate.id), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, candidate.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, candidate.party.name));
+        });
+        content = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+          className: "table-responsive"
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+          className: "table table-bordered table-hover"
+        }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "ID"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Name"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Party Name"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, items)));
+      }
+
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "container"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "row justify-content-center"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "col-md-8"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "card"
-      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "card-header"
-      }, "Example Component"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-        className: "card-body"
-      }, "I'm an example component!")))));
+        className: "content-wrapper"
+      }, content);
     }
   }]);
 
-  return Example;
+  return Candidates;
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]);
 
 
 
 if (document.getElementById('content-candidates')) {
-  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Example, null), document.getElementById('content-candidates'));
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render(react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(Candidates, null), document.getElementById('content-candidates'));
 }
 
 /***/ }),
