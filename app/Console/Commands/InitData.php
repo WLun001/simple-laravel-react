@@ -56,11 +56,11 @@ class InitData extends Command
         ],
         [
             'name' => 'Foo Yoke Wai',
-            'party_id' => 3,
+            'party_id' => 1,
         ],
         [
             'name' => 'Chia Kim Hooi',
-            'party_id' => 3,
+            'party_id' => 2,
         ],
     ];
 
@@ -90,8 +90,8 @@ class InitData extends Command
         foreach ($this->candidates_data as $candidates_data) {
             $candidate = new Candidate;
             $candidate->name = $candidates_data['name'];
-            $candidate->party = $candidates_data['party_id'];
-            $party->save();
+            $candidate->party_id = $candidates_data['party_id'];
+            $candidate->save();
 
             echo "Candidate $candidate->name created successfully\n";
         }

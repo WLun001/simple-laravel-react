@@ -10,6 +10,6 @@ class Candidate extends Model
 
     public function party()
     {
-        return $this->hasOne(Party::class);
+        return $this->belongsTo(Party::class);
     }
 }
