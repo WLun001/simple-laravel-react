@@ -61318,9 +61318,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -61341,8 +61341,10 @@ function (_Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Candidates).call(this, props));
     _this.state = {
-      candidates: null
+      candidates: null,
+      candidate: null
     };
+    _this.handleClick = _this.handleClick.bind(_assertThisInitialized(_this));
     return _this;
   }
 
@@ -61361,8 +61363,6 @@ function (_Component) {
         if (!response.ok) throw Error([response.status, response.statusText].join(' '));
         return response.json();
       }).then(function (body) {
-        console.log(body);
-
         _this2.setState({
           candidates: body.data
         });
@@ -61371,8 +61371,32 @@ function (_Component) {
       });
     }
   }, {
+    key: "handleClick",
+    value: function handleClick(event) {
+      var _this3 = this;
+
+      var url = "api/candidates/".concat(event.target.value);
+      fetch(url, {
+        headers: {
+          Accept: 'application/json'
+        },
+        credentials: 'same-origin'
+      }).then(function (response) {
+        if (!response.ok) throw Error([response.status, response.statusText].join(' '));
+        return response.json();
+      }).then(function (body) {
+        _this3.setState({
+          candidate: body.data
+        });
+      }).catch(function (error) {
+        return alert(error);
+      });
+    }
+  }, {
     key: "render",
     value: function render() {
+      var _this4 = this;
+
       var candidates = this.state.candidates;
       var content;
 
@@ -61384,7 +61408,14 @@ function (_Component) {
         var items = candidates.map(function (candidate) {
           return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
             key: candidate.id
-          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, candidate.id), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, candidate.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, candidate.party.name));
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, candidate.id), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("a", {
+            href: '#'
+          }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", {
+            value: candidate.id,
+            onClick: function onClick(event) {
+              return _this4.handleClick(event);
+            }
+          }, candidate.name))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, candidate.party.name));
         });
         content = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
           className: "table-responsive"
@@ -61393,9 +61424,15 @@ function (_Component) {
         }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "ID"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Name"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Party Name"))), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, items)));
       }
 
+      var item;
+
+      if (this.state.candidate != null) {
+        item = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, "Candidate Name")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.candidate.name), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h6", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, "Party Name")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, this.state.candidate.party.name));
+      }
+
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "content-wrapper"
-      }, content);
+      }, content, item);
     }
   }]);
 

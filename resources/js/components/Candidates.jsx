@@ -7,8 +7,10 @@ export default class Candidates extends Component {
         super(props);
 
         this.state = {
-            candidates: null
-        }
+            candidates: null,
+            candidate: null,
+        };
+        this.handleClick = this.handleClick.bind(this);
     }
 
     componentDidMount() {
@@ -23,12 +25,31 @@ export default class Candidates extends Component {
                 if (!response.ok) throw Error([response.status, response.statusText].join(' '));
                 return response.json()
             }).then((body) => {
-            console.log(body);
             this.setState({
                 candidates: body.data,
             })
         })
             .catch((error) => alert(error))
+    }
+
+    handleClick(event) {
+        const url = `api/candidates/${event.target.value}`;
+        fetch(url, {
+            headers: {
+                Accept: 'application/json',
+            },
+            credentials: 'same-origin',
+        })
+            .then((response) => {
+                if (!response.ok) throw Error([response.status, response.statusText].join(' '));
+                return response.json()
+            }).then((body) => {
+            this.setState({
+                candidate: body.data,
+            })
+        })
+            .catch((error) => alert(error));
+
     }
 
     render() {
@@ -48,7 +69,13 @@ export default class Candidates extends Component {
             let items = candidates.map((candidate) =>
                 <tr key={candidate.id}>
                     <td>{candidate.id}</td>
-                    <td>{candidate.name}</td>
+                    <td>
+                        <a href={'#'}>
+                            <li value={candidate.id} onClick={(event) => this.handleClick(event)}>
+                                {candidate.name}
+                            </li>
+                        </a>
+                    </td>
                     <td>{candidate.party.name}</td>
                 </tr>
             );
@@ -70,9 +97,21 @@ export default class Candidates extends Component {
                 </div>
             )
         }
+        let item;
+        if (this.state.candidate != null) {
+            item =
+                <div>
+                    <h6><strong>Candidate Name</strong></h6>
+                    <p>{this.state.candidate.name}</p>
+                    <h6><strong>Party Name</strong></h6>
+                    <p>{this.state.candidate.party.name}</p>
+                </div>
+        }
+
         return (
             <div className="content-wrapper">
                 {content}
+                {item}
             </div>
         )
 
